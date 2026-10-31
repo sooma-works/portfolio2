@@ -5,48 +5,89 @@ import { Signature } from './sooma-signature/Signature.jsx'
 const hoy = new Date()
 const fecha = [hoy.getDate(), hoy.getMonth() + 1, hoy.getFullYear()].map((n) => String(n).padStart(2, '0')).join('.')
 
-// El pie es el rótulo de la lámina: la firma de Sooma va en la celda "Dibujó".
+const links = [
+  { to: '/#obras', label: 'Obras' },
+  { to: '/#materiales', label: 'Materiales' },
+  { to: '/#estudio', label: 'Estudio' },
+  { to: '/#contacto', label: 'Contacto' },
+]
+
+// Pie en grafito, como el reverso de la lámina. Abajo, el rótulo: la firma de
+// Sooma va en la celda "Dibujó" (variante a color, la original, sobre oscuro).
 export default function Footer({ lamina = '00' }) {
   return (
-    <footer className="frame pt-16 pb-10">
-      <div className="rotulo grid grid-cols-2 md:grid-cols-6">
-        <div className="cell col-span-2 md:row-span-2">
-          <span className="cell-k">Estudio</span>
-          <p className="wide text-[28px] leading-none font-[750]">{estudio.nombre}</p>
-          <p className="mono mt-2 text-concrete-ink">
-            {contacto.direccion} · {contacto.ciudad}
-          </p>
-        </div>
-        <div className="cell">
-          <span className="cell-k">Lámina</span>
-          <span className="mono text-[15px]">{lamina}</span>
-        </div>
-        <div className="cell">
-          <span className="cell-k">Escala</span>
-          <span className="mono text-[15px]">1:1</span>
-        </div>
-        <div className="cell">
-          <span className="cell-k">Fecha</span>
-          <span className="mono text-[15px]">{fecha}</span>
-        </div>
-        <div className="cell">
-          <span className="cell-k">Desde</span>
-          <span className="mono text-[15px]">{estudio.desde}</span>
-        </div>
-        <div className="cell col-span-2 md:col-span-2">
-          <span className="cell-k">Dibujó</span>
-          <Signature variant="black" />
-        </div>
-        <div className="cell col-span-2 md:col-span-2">
-          <span className="cell-k">Notas</span>
-          <p className="mono">Proyecto demo · contenido ficticio</p>
-          <p className="mono text-concrete-ink">
-            Fotos de Unsplash ·{' '}
-            <CutLink to="/creditos" className="underline decoration-1 underline-offset-2">
-              ver créditos
+    <footer className="site-footer">
+      <div className="frame">
+        <div className="footer-top">
+          <div className="footer-brand">
+            <p className="mono footer-k">Estudio</p>
+            <CutLink to="/" className="footer-name" aria-label="Estudio Lindero, inicio">
+              Lindero
             </CutLink>
-          </p>
+          </div>
+          <p className="footer-bajada">Arquitectura, reformas e interiorismo. {contacto.ciudad}.</p>
+          <div className="footer-cols">
+            <nav aria-label="Secciones del pie">
+              <p className="mono footer-k">Índice</p>
+              <ul>
+                {links.map((l) => (
+                  <li key={l.to}>
+                    <CutLink to={l.to} className="footer-link">
+                      {l.label}
+                    </CutLink>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            <div>
+              <p className="mono footer-k">Contacto</p>
+              <ul>
+                <li>
+                  <a href={`mailto:${contacto.email}`} className="footer-link">
+                    {contacto.email}
+                  </a>
+                </li>
+                <li>
+                  <a href={contacto.whatsapp} target="_blank" rel="noreferrer" className="footer-link">
+                    {contacto.telefono}
+                  </a>
+                </li>
+                <li className="footer-dim">{contacto.direccion}</li>
+              </ul>
+            </div>
+          </div>
         </div>
+
+        <div className="footer-rotulo">
+          <div className="fcell">
+            <span className="fcell-k">Lámina</span>
+            <span className="mono">{lamina}</span>
+          </div>
+          <div className="fcell">
+            <span className="fcell-k">Escala</span>
+            <span className="mono">1:1</span>
+          </div>
+          <div className="fcell">
+            <span className="fcell-k">Fecha</span>
+            <span className="mono">{fecha}</span>
+          </div>
+          <div className="fcell fcell-sig">
+            <span className="fcell-k">Dibujó</span>
+            <Signature />
+          </div>
+          <div className="fcell fcell-notas">
+            <span className="fcell-k">Notas</span>
+            <span className="mono">
+              Proyecto demo · contenido ficticio ·{' '}
+              <CutLink to="/creditos" className="footer-link">
+                créditos de fotos
+              </CutLink>
+            </span>
+          </div>
+        </div>
+        <p className="mono footer-dim footer-desde">
+          {estudio.nombre} · desde {estudio.desde}
+        </p>
       </div>
     </footer>
   )
