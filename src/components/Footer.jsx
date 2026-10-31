@@ -12,24 +12,23 @@ const links = [
   { to: '/#contacto', label: 'Contacto' },
 ]
 
-// Pie en grafito, como el reverso de la lámina. Abajo, el rótulo: la firma de
-// Sooma va en la celda "Dibujó".
+// Pie en grafito: una línea con estudio, índice y contacto, y debajo el
+// rótulo de la lámina con la firma de Sooma en la celda "Dibujó".
 export default function Footer({ lamina = '00' }) {
   return (
     <footer className="site-footer">
       <div className="frame">
         <div className="footer-top">
-          <div>
-            <CutLink to="/" className="footer-name" aria-label="Estudio Lindero, inicio">
+          <p className="footer-name">
+            <CutLink to="/" aria-label="Estudio Lindero, inicio">
               Estudio Lindero
             </CutLink>
-            <p className="footer-bajada">
-              Arquitectura, reformas e interiorismo en {contacto.ciudad}. Desde {estudio.desde}.
-            </p>
-          </div>
+            <span className="mono footer-dim">
+              {contacto.ciudad} · desde {estudio.desde}
+            </span>
+          </p>
           <nav aria-label="Secciones del pie">
-            <p className="mono footer-k">Índice</p>
-            <ul>
+            <ul className="footer-nav mono">
               {links.map((l) => (
                 <li key={l.to}>
                   <CutLink to={l.to} className="footer-link">
@@ -39,44 +38,29 @@ export default function Footer({ lamina = '00' }) {
               ))}
             </ul>
           </nav>
-          <div>
-            <p className="mono footer-k">Contacto</p>
-            <ul>
-              <li>
-                <a href={`mailto:${contacto.email}`} className="footer-link">
-                  {contacto.email}
-                </a>
-              </li>
-              <li>
-                <a href={contacto.whatsapp} target="_blank" rel="noreferrer" className="footer-link">
-                  {contacto.telefono}
-                </a>
-              </li>
-              <li className="footer-dim">{contacto.direccion}</li>
-            </ul>
-          </div>
+          <a href={`mailto:${contacto.email}`} className="footer-link mono">
+            {contacto.email}
+          </a>
         </div>
 
-        <div className="footer-rotulo">
+        <div className="footer-rotulo mono">
           <div className="fcell">
-            <span className="fcell-k">Lámina</span>
-            <span className="mono">{lamina}</span>
+            <span className="fcell-k">Lámina</span> {lamina}
           </div>
           <div className="fcell">
-            <span className="fcell-k">Escala</span>
-            <span className="mono">1:1</span>
+            <span className="fcell-k">Esc.</span> 1:1
           </div>
           <div className="fcell">
-            <span className="fcell-k">Fecha</span>
-            <span className="mono">{fecha}</span>
+            <span className="fcell-k">Fecha</span> {fecha}
           </div>
           <div className="fcell fcell-sig">
             <span className="fcell-k">Dibujó</span>
-            <Signature variant="white" />
+            <span className="sig-wrap">
+              <Signature variant="white" />
+            </span>
           </div>
           <div className="fcell fcell-notas">
-            <span className="fcell-k">Notas</span>
-            <span className="mono">
+            <span>
               Proyecto demo · contenido ficticio ·{' '}
               <CutLink to="/creditos" className="footer-link">
                 créditos de fotos

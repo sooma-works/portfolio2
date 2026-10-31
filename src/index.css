@@ -1386,57 +1386,41 @@ html[data-snap='on'] .cad-box {
 .site-footer {
   position: relative;
   z-index: 6;
-  margin-top: 144px;
-  padding: 56px 0 32px;
+  margin-top: 128px;
+  padding: 28px 0 24px;
   color: var(--paper);
-  background-color: var(--graphite);
-  background-image:
-    linear-gradient(to right, rgb(242 239 232 / 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(242 239 232 / 0.05) 1px, transparent 1px);
-  background-size: var(--mod) var(--mod);
-  background-position: var(--gx) 0;
+  background: var(--graphite);
 }
 .site-footer a {
   text-decoration: none;
 }
-.footer-k {
-  margin: 0 0 12px;
-  color: rgb(242 239 232 / 0.6);
-}
 .footer-top {
-  display: grid;
-  gap: 40px;
-  padding-bottom: 48px;
-}
-@media (min-width: 768px) {
-  .footer-top {
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.6fr) minmax(0, 1fr);
-    gap: 32px;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px 32px;
+  padding-bottom: 20px;
 }
 .footer-name {
-  font-size: 30px;
-  font-weight: 760;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  font-variation-settings: 'wdth' 118;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  margin: 0;
+  font-size: 17px;
+  font-weight: 720;
+  font-variation-settings: 'wdth' 112;
 }
-.footer-bajada {
-  margin: 14px 0 0;
-  max-width: 34ch;
-  font-size: 15px;
-  line-height: 1.45;
-  color: rgb(242 239 232 / 0.72);
-}
-.footer-top ul {
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
   margin: 0;
   padding: 0;
   list-style: none;
-  display: grid;
-  gap: 6px;
 }
 .footer-link {
-  font-size: 15px;
   background: linear-gradient(var(--marker), var(--marker)) no-repeat 0 100% / 0 1.5px;
   padding-bottom: 2px;
   transition: background-size 0.3s ease;
@@ -1446,51 +1430,63 @@ html[data-snap='on'] .cad-box {
   background-size: 100% 1.5px;
 }
 .footer-dim {
+  font-size: 11.5px;
+  font-weight: 400;
   color: rgb(242 239 232 / 0.6);
-  font-size: 14px;
 }
 .footer-rotulo {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  border-top: 1px solid rgb(242 239 232 / 0.28);
-  border-left: 1px solid rgb(242 239 232 / 0.28);
+  display: flex;
+  flex-wrap: wrap;
+  border-top: 1px solid rgb(242 239 232 / 0.25);
+  font-size: 11.5px;
 }
 .fcell {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 8px;
-  min-width: 0;
-  padding: 10px 12px 12px;
-  border-right: 1px solid rgb(242 239 232 / 0.28);
-  border-bottom: 1px solid rgb(242 239 232 / 0.28);
+  min-height: 40px;
+  padding: 6px 14px;
+  border-right: 1px solid rgb(242 239 232 / 0.25);
 }
-.fcell .mono {
-  font-size: 12px;
+.fcell:first-child {
+  padding-left: 0;
 }
-.fcell .footer-link {
-  font-size: inherit;
+.fcell-k {
+  color: rgb(242 239 232 / 0.55);
+}
+.fcell-notas {
+  flex: 1;
+  justify-content: flex-end;
+  border-right: 0;
+  padding-right: 0;
+  color: rgb(242 239 232 / 0.75);
+}
+.fcell-notas .footer-link {
+  color: var(--paper);
   text-decoration: underline;
   text-decoration-color: rgb(242 239 232 / 0.4);
   text-underline-offset: 3px;
 }
-.fcell-k {
-  font: 400 10.5px/1.3 var(--font-mono);
-  color: rgb(242 239 232 / 0.6);
+/* La firma, un poco más chica sin tocar su animación. */
+.sig-wrap {
+  display: inline-flex;
+  zoom: 0.78;
 }
-.fcell-sig,
-.fcell-notas {
-  grid-column: span 3;
-}
-.fcell-sig .signature {
-  align-self: flex-start;
-}
-@media (min-width: 900px) {
-  .footer-rotulo {
-    grid-template-columns: 0.8fr 0.6fr 0.9fr 1.3fr 2.4fr;
-  }
-  .fcell-sig,
+@media (max-width: 767px) {
   .fcell-notas {
-    grid-column: auto;
+    flex-basis: 100%;
+    justify-content: flex-start;
+    padding-left: 0;
+    border-top: 1px solid rgb(242 239 232 / 0.25);
+  }
+  .fcell-sig {
+    flex-basis: 100%;
+    padding-left: 0;
+    border-right: 0;
+    border-top: 1px solid rgb(242 239 232 / 0.25);
+  }
+  .fcell:nth-child(3) {
+    border-right: 0;
   }
 }
 
