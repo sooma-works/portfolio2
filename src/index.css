@@ -1467,11 +1467,9 @@ html[data-snap='on'] .cad-box {
   text-decoration-color: rgb(242 239 232 / 0.4);
   text-underline-offset: 3px;
 }
-/* La firma alterna entre logo y "Hecho por sooma.", que cambian de ancho:
-   la celda tiene ancho fijo para que la línea divisoria no se mueva. */
+/* La firma cambia de ancho al animarse: su celda va sin línea a la derecha. */
 .fcell-sig {
-  flex: none;
-  width: 236px;
+  border-right: 0;
 }
 /* La firma, un poco más chica sin tocar su animación. */
 .sig-wrap {
@@ -1486,7 +1484,6 @@ html[data-snap='on'] .cad-box {
     border-top: 1px solid rgb(242 239 232 / 0.25);
   }
   .fcell-sig {
-    width: auto;
     flex-basis: 100%;
     padding-left: 0;
     border-right: 0;
