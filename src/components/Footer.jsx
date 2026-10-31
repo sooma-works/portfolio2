@@ -13,48 +13,47 @@ const links = [
 ]
 
 // Pie en grafito, como el reverso de la lámina. Abajo, el rótulo: la firma de
-// Sooma va en la celda "Dibujó" (variante a color, la original, sobre oscuro).
+// Sooma va en la celda "Dibujó".
 export default function Footer({ lamina = '00' }) {
   return (
     <footer className="site-footer">
       <div className="frame">
         <div className="footer-top">
-          <div className="footer-brand">
-            <p className="mono footer-k">Estudio</p>
+          <div>
             <CutLink to="/" className="footer-name" aria-label="Estudio Lindero, inicio">
-              Lindero
+              Estudio Lindero
             </CutLink>
+            <p className="footer-bajada">
+              Arquitectura, reformas e interiorismo en {contacto.ciudad}. Desde {estudio.desde}.
+            </p>
           </div>
-          <p className="footer-bajada">Arquitectura, reformas e interiorismo. {contacto.ciudad}.</p>
-          <div className="footer-cols">
-            <nav aria-label="Secciones del pie">
-              <p className="mono footer-k">Índice</p>
-              <ul>
-                {links.map((l) => (
-                  <li key={l.to}>
-                    <CutLink to={l.to} className="footer-link">
-                      {l.label}
-                    </CutLink>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-            <div>
-              <p className="mono footer-k">Contacto</p>
-              <ul>
-                <li>
-                  <a href={`mailto:${contacto.email}`} className="footer-link">
-                    {contacto.email}
-                  </a>
+          <nav aria-label="Secciones del pie">
+            <p className="mono footer-k">Índice</p>
+            <ul>
+              {links.map((l) => (
+                <li key={l.to}>
+                  <CutLink to={l.to} className="footer-link">
+                    {l.label}
+                  </CutLink>
                 </li>
-                <li>
-                  <a href={contacto.whatsapp} target="_blank" rel="noreferrer" className="footer-link">
-                    {contacto.telefono}
-                  </a>
-                </li>
-                <li className="footer-dim">{contacto.direccion}</li>
-              </ul>
-            </div>
+              ))}
+            </ul>
+          </nav>
+          <div>
+            <p className="mono footer-k">Contacto</p>
+            <ul>
+              <li>
+                <a href={`mailto:${contacto.email}`} className="footer-link">
+                  {contacto.email}
+                </a>
+              </li>
+              <li>
+                <a href={contacto.whatsapp} target="_blank" rel="noreferrer" className="footer-link">
+                  {contacto.telefono}
+                </a>
+              </li>
+              <li className="footer-dim">{contacto.direccion}</li>
+            </ul>
           </div>
         </div>
 
@@ -73,7 +72,7 @@ export default function Footer({ lamina = '00' }) {
           </div>
           <div className="fcell fcell-sig">
             <span className="fcell-k">Dibujó</span>
-            <Signature />
+            <Signature variant="white" />
           </div>
           <div className="fcell fcell-notas">
             <span className="fcell-k">Notas</span>
@@ -85,9 +84,6 @@ export default function Footer({ lamina = '00' }) {
             </span>
           </div>
         </div>
-        <p className="mono footer-dim footer-desde">
-          {estudio.nombre} · desde {estudio.desde}
-        </p>
       </div>
     </footer>
   )

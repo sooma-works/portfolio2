@@ -458,7 +458,7 @@ html.cad-on * {
   inset: 0;
   background: linear-gradient(to bottom, rgb(28 29 31 / 0.62), rgb(28 29 31 / 0.38) 38%, rgb(28 29 31 / 0) 62%);
   opacity: 0;
-  transition: opacity 1s ease 0.6s;
+  transition: opacity 0.5s ease;
 }
 .hero.is-open .hero-photo::after {
   opacity: 1;
@@ -471,9 +471,9 @@ html.cad-on * {
 .hero.is-open .hero-title,
 .hero.is-open .hero-bajada {
   color: var(--paper);
-  transition-delay: 0.7s;
+  transition-duration: 0.5s;
 }
-.hero.is-open .hero-meta {
+.hero.is-growing .hero-meta {
   opacity: 0;
 }
 .hero-card {
@@ -489,8 +489,8 @@ html.cad-on * {
   transform: translateY(14px);
   pointer-events: none;
   transition:
-    opacity 0.5s ease 1.2s,
-    transform 0.5s ease 1.2s;
+    opacity 0.5s ease 0.5s,
+    transform 0.5s ease 0.5s;
 }
 .hero-card.is-in {
   opacity: 1;
@@ -1387,65 +1387,48 @@ html[data-snap='on'] .cad-box {
   position: relative;
   z-index: 6;
   margin-top: 144px;
-  padding: 72px 0 28px;
+  padding: 56px 0 32px;
   color: var(--paper);
   background-color: var(--graphite);
   background-image:
-    linear-gradient(to right, rgb(242 239 232 / 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(242 239 232 / 0.06) 1px, transparent 1px);
+    linear-gradient(to right, rgb(242 239 232 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(242 239 232 / 0.05) 1px, transparent 1px);
   background-size: var(--mod) var(--mod);
   background-position: var(--gx) 0;
 }
 .site-footer a {
   text-decoration: none;
 }
-.site-footer :focus-visible {
-  outline-color: var(--marker);
-}
 .footer-k {
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   color: rgb(242 239 232 / 0.6);
 }
 .footer-top {
   display: grid;
-  gap: 48px;
-  padding-bottom: 56px;
+  gap: 40px;
+  padding-bottom: 48px;
 }
-@media (min-width: 900px) {
+@media (min-width: 768px) {
   .footer-top {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 520px);
-    gap: 40px 32px;
-  }
-  .footer-brand {
-    grid-column: 1 / -1;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.6fr) minmax(0, 1fr);
+    gap: 32px;
   }
 }
 .footer-name {
-  display: inline-block;
-  font-size: min(176px, calc(var(--frame) / 4.6));
-  font-weight: 820;
-  line-height: 0.82;
-  letter-spacing: -0.035em;
-  font-variation-settings: 'wdth' 125;
-  margin-left: -0.04em;
+  font-size: 30px;
+  font-weight: 760;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variation-settings: 'wdth' 118;
 }
 .footer-bajada {
-  margin: 0;
-  max-width: 30ch;
-  font-size: 16px;
-  color: rgb(242 239 232 / 0.75);
+  margin: 14px 0 0;
+  max-width: 34ch;
+  font-size: 15px;
+  line-height: 1.45;
+  color: rgb(242 239 232 / 0.72);
 }
-.footer-cols {
-  display: grid;
-  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1fr);
-  gap: 32px;
-}
-@media (max-width: 480px) {
-  .footer-cols {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-.footer-cols ul {
+.footer-top ul {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1453,7 +1436,7 @@ html[data-snap='on'] .cad-box {
   gap: 6px;
 }
 .footer-link {
-  font-size: 16px;
+  font-size: 15px;
   background: linear-gradient(var(--marker), var(--marker)) no-repeat 0 100% / 0 1.5px;
   padding-bottom: 2px;
   transition: background-size 0.3s ease;
@@ -1469,22 +1452,20 @@ html[data-snap='on'] .cad-box {
 .footer-rotulo {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  border-top: 1px solid rgb(242 239 232 / 0.3);
-  border-left: 1px solid rgb(242 239 232 / 0.3);
+  border-top: 1px solid rgb(242 239 232 / 0.28);
+  border-left: 1px solid rgb(242 239 232 / 0.28);
 }
 .fcell {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   gap: 8px;
   min-width: 0;
-  min-height: 76px;
   padding: 10px 12px 12px;
-  border-right: 1px solid rgb(242 239 232 / 0.3);
-  border-bottom: 1px solid rgb(242 239 232 / 0.3);
+  border-right: 1px solid rgb(242 239 232 / 0.28);
+  border-bottom: 1px solid rgb(242 239 232 / 0.28);
 }
 .fcell .mono {
-  font-size: 12.5px;
+  font-size: 12px;
 }
 .fcell .footer-link {
   font-size: inherit;
@@ -1505,16 +1486,12 @@ html[data-snap='on'] .cad-box {
 }
 @media (min-width: 900px) {
   .footer-rotulo {
-    grid-template-columns: 1fr 0.7fr 1fr 1.3fr 2.2fr;
+    grid-template-columns: 0.8fr 0.6fr 0.9fr 1.3fr 2.4fr;
   }
   .fcell-sig,
   .fcell-notas {
     grid-column: auto;
   }
-}
-.footer-desde {
-  margin: 14px 0 0;
-  font-size: 11px;
 }
 
 @media (max-width: 640px) {

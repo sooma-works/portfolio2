@@ -95,7 +95,7 @@
   color: #fff;
 }
 .signature--white .sig-mark img {
-  filter: brightness(0) invert(1);
+  filter: none;
 }
 .signature--black,
 .signature--black .sig-sooma,
