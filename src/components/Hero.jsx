@@ -17,6 +17,29 @@ const photo = obra.fotos[room.photo]
 // El nombre se comprime a medida que el hero sale de pantalla.
 const leaving = (r) => -r.top / (r.height * 0.8)
 
+// Destino de cada vértice al expandir el ambiente a toda la sección.
+function morphTargets(pts, W, H) {
+  const xs = pts.map((p) => p[0])
+  const ys = pts.map((p) => p[1])
+  const [x0, y0, x1, y1] = [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)]
+  const corners = [
+    [x0, y0, 0, 0],
+    [x1, y0, W, 0],
+    [x1, y1, W, H],
+    [x0, y1, 0, H],
+  ]
+  const near = (a, b) => Math.abs(a - b) < 1.5
+  const isCorner = ([x, y], c) => near(x, c[0]) && near(y, c[1])
+  const missing = corners.filter((c) => !pts.some((p) => isCorner(p, c)))
+  return pts.map((p) => {
+    const own = corners.find((c) => isCorner(p, c))
+    if (own) return [own[2], own[3]]
+    const pool = missing.length ? missing : corners
+    const c = pool.reduce((best, c) => (Math.hypot(p[0] - c[0], p[1] - c[1]) < Math.hypot(p[0] - best[0], p[1] - best[1]) ? c : best))
+    return [c[2], c[3]]
+  })
+}
+
 const poly = (pts) => `polygon(${pts.map(([x, y]) => `${x.toFixed(1)}px ${y.toFixed(1)}px`).join(', ')})`
 
 /**
@@ -30,7 +53,7 @@ export default function Hero() {
   const wrap = useRef(null)
   const imgRef = useRef(null)
   const narrow = useMedia('(max-width: 767px)')
-  const [phase, setPhase] = useState('draw') // draw → room → open
+  const [phase, setPhase] = useState('draw') // draw → room → grow → open
   const tl = useRef(null)
 
   const nameRef = useRef(null)
@@ -67,15 +90,16 @@ export default function Hero() {
       wrap.current.style.opacity = 1
       return
     }
-    // Centro de la expansión: un punto dentro del patio (el rótulo).
-    const [ox, oy] = (() => {
-      const xs = pts.map((p) => p[0])
-      const ys = pts.map((p) => p[1])
-      return [(Math.max(...xs) * 0.6 + Math.min(...xs) * 0.4), (Math.max(...ys) + Math.min(...ys)) / 2]
-    })()
-    const state = { k: 1 }
+    // Cada vértice del ambiente viaja a una esquina de la pantalla. Las
+    // esquinas del ambiente van a su esquina equivalente; los vértices de la
+    // muesca de la L van a la esquina que le falta, así la forma se completa
+    // en un rectángulo mientras crece, sin pasar por figuras raras.
+    const { width: W, height: H } = sec.current.getBoundingClientRect()
+    const targets = morphTargets(pts, W, H)
+    const state = { t: 0 }
     const apply = () => {
-      wrap.current.style.clipPath = poly(pts.map(([x, y]) => [ox + (x - ox) * state.k, oy + (y - oy) * state.k]))
+      const e = state.t
+      wrap.current.style.clipPath = poly(pts.map(([x, y], i) => [x + (targets[i][0] - x) * e, y + (targets[i][1] - y) * e]))
     }
     tl.current = gsap
       .timeline()
@@ -85,9 +109,11 @@ export default function Hero() {
         Object.assign(wrap.current.style, { left: '0px', top: '0px', width: '100%', height: '100%' })
         Object.assign(imgRef.current.style, { left: '0px', top: '0px', width: '100%', height: '100%' })
         apply()
-        setPhase('open')
+        setPhase('grow')
       }, '+=0.7')
-      .to(state, { k: 14, duration: 1.5, ease: 'power3.inOut', onUpdate: apply })
+      .to(state, { t: 1, duration: 1.5, ease: 'power3.inOut', onUpdate: apply })
+      // El título pasa a papel recién cuando la foto ya lo tiene debajo.
+      .add(() => setPhase('open'), '-=0.45')
       .add(() => {
         wrap.current.style.clipPath = 'none'
       })
@@ -106,7 +132,7 @@ export default function Hero() {
   const open = phase === 'open'
 
   return (
-    <section ref={sec} className={`hero ${open ? 'is-open' : ''}`} aria-labelledby="hero-title">
+    <section ref={sec} className={`hero ${open ? 'is-open' : ''} ${open || phase === 'grow' ? 'is-growing' : ''}`} aria-labelledby="hero-title">
       <div className="frame hero-inner">
         <div className="hero-head">
           <h1 id="hero-title" className="hero-title">
