@@ -8,20 +8,20 @@ import { SectionTitle } from './Titles.jsx'
 
 // Posición inicial de cada muestra sobre la mesa (% del ancho/alto) y giro.
 const layout = [
-  { x: 4, y: 8, r: -4 },
-  { x: 22, y: 30, r: 3 },
-  { x: 40, y: 6, r: -2 },
-  { x: 57, y: 34, r: 5 },
-  { x: 72, y: 4, r: -6 },
-  { x: 84, y: 30, r: 2 },
+  { x: 5, y: 10, r: -4 },
+  { x: 20, y: 44, r: 3 },
+  { x: 38, y: 8, r: -2 },
+  { x: 55, y: 46, r: 5 },
+  { x: 70, y: 6, r: -6 },
+  { x: 84, y: 40, r: 2 },
 ]
 const layoutMobile = [
-  { x: 2, y: 2, r: -4 },
-  { x: 50, y: 6, r: 3 },
-  { x: 6, y: 34, r: 2 },
-  { x: 48, y: 38, r: -5 },
-  { x: 3, y: 66, r: 4 },
-  { x: 47, y: 68, r: -2 },
+  { x: 4, y: 5, r: -4 },
+  { x: 54, y: 9, r: 3 },
+  { x: 8, y: 36, r: 2 },
+  { x: 52, y: 40, r: -5 },
+  { x: 5, y: 66, r: 4 },
+  { x: 53, y: 69, r: -2 },
 ]
 
 function Muestra({ m, i, pos, table, z, onFront, reset }) {
@@ -69,7 +69,7 @@ function Muestra({ m, i, pos, table, z, onFront, reset }) {
         <span className="mono text-concrete-ink">{m.codigo}</span>
         <span className="muestra-name">{m.nombre}</span>
         <span className="mono muestra-prov">{m.proveedor}</span>
-        <span className="mono muestra-prov text-concrete-ink">{m.detalle}</span>
+        <span className="mono muestra-prov muestra-detalle text-concrete-ink">{m.detalle}</span>
       </figcaption>
     </motion.figure>
   )
@@ -100,6 +100,9 @@ export default function Muestrario() {
       <div ref={table} className="mesa">
         <span className="mesa-cota mono" aria-hidden="true">
           Mesa de trabajo · 1,80 × 0,90
+        </span>
+        <span className="mesa-hint mono" aria-hidden="true">
+          {narrow ? 'Arrastrá las muestras con el dedo' : 'Arrastrá las muestras'}
         </span>
         {materiales.map((m, i) => (
           <Muestra key={m.codigo} m={m} i={i} pos={pos[i]} table={table} z={order.indexOf(i) + 1} onFront={front} reset={reset} />

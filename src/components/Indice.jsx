@@ -23,6 +23,10 @@ export default function Indice() {
 
   useEffect(() => {
     fine.current = isFinePointer()
+    // Al scrollear, la fila bajo el cursor cambia: se esconde la miniatura.
+    const off = () => setHover(null)
+    window.addEventListener('scroll', off, { passive: true })
+    return () => window.removeEventListener('scroll', off)
   }, [])
 
   const move = (e) => {
@@ -91,28 +95,18 @@ export default function Indice() {
           <li key={o.slug} className="rotulo-card">
             <CutLink to={`/obras/${o.slug}`} className="grid grid-cols-[96px_1fr] no-underline">
               <Img photo={o.fotos[0]} alt="" sizes="96px" className="h-full w-full object-cover" />
-              <div className="grid grid-cols-2">
-                <div className="cell col-span-2">
+              <div className="flex min-w-0 flex-col">
+                <div className="cell">
                   <span className="cell-k">Lámina {o.numero}</span>
                   <span className="text-[19px] leading-tight font-[650]">{o.nombre}</span>
                 </div>
-                <div className="cell">
-                  <span className="cell-k">Tipo</span>
+                <div className="cell flex-1">
                   <span className="text-[14px] leading-snug">{o.tipo}</span>
-                </div>
-                <div className="cell">
-                  <span className="cell-k">Estado</span>
-                  <span className="mono">
+                  <span className="mono flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <span>{o.m2} m²</span>
+                    <span>{o.anio}</span>
                     <Estado value={o.estado} />
                   </span>
-                </div>
-                <div className="cell">
-                  <span className="cell-k">Superficie</span>
-                  <span className="mono">{o.m2} m²</span>
-                </div>
-                <div className="cell">
-                  <span className="cell-k">Año</span>
-                  <span className="mono">{o.anio}</span>
                 </div>
               </div>
             </CutLink>

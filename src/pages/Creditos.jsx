@@ -48,7 +48,7 @@ export default function Creditos() {
           </section>
         ))}
       </main>
-      <Footer lamina="99 · Créditos" />
+      <Footer lamina="99" />
     </>
   )
 }

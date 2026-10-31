@@ -114,17 +114,20 @@ export default function Obra() {
 
         <nav className="frame obra-next" aria-label="Obra siguiente">
           <CutLink to={`/obras/${next.slug}`} className="next-link">
-            <span className="mono text-concrete-ink">Siguiente · Lámina {next.numero}</span>
-            <Extrude as="span" className="next-title" key={next.slug}>
-              {next.nombre}
-            </Extrude>
-            <span className="mono">
-              {next.tipo} · {next.ubicacion} · {next.anio}
+            <span className="next-text">
+              <span className="mono text-concrete-ink">Siguiente · Lámina {next.numero}</span>
+              <Extrude as="span" className="next-title" key={next.slug}>
+                {next.nombre}
+              </Extrude>
+              <span className="mono">
+                {next.tipo} · {next.ubicacion} · {next.anio}
+              </span>
             </span>
+            <Img photo={next.fotos[0]} alt="" sizes="(min-width: 900px) 30vw, 100vw" className="next-img" />
           </CutLink>
         </nav>
       </main>
-      <Footer lamina={`${obra.numero} · ${obra.nombre}`} />
+      <Footer lamina={obra.numero} />
     </>
   )
 }

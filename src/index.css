@@ -139,16 +139,15 @@ html.cad-on * {
 .extrude.is-up {
   color: var(--graphite);
   -webkit-text-stroke: 1.2px var(--graphite);
-  transform: translate(-6px, -6px);
+  transform: translate(-0.04em, -0.04em);
   text-shadow:
-    1px 1px 0 var(--line),
-    2px 2px 0 var(--line),
-    3px 3px 0 var(--line),
-    4px 4px 0 var(--line),
-    5px 5px 0 var(--line),
-    6px 6px 0 var(--line),
-    7px 7px 0 var(--concrete),
-    8px 8px 12px rgb(28 29 31 / 0.12);
+    0.007em 0.007em 0 var(--line),
+    0.014em 0.014em 0 var(--line),
+    0.021em 0.021em 0 var(--line),
+    0.028em 0.028em 0 var(--line),
+    0.035em 0.035em 0 var(--line),
+    0.042em 0.042em 0 var(--concrete),
+    0.05em 0.05em 0.08em rgb(28 29 31 / 0.12);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -191,10 +190,11 @@ html.cad-on * {
   position: absolute;
   display: grid;
   place-items: center;
-  width: 16px;
+  min-width: 16px;
   height: 16px;
+  padding-inline: 2px;
   border: 1px solid var(--graphite);
-  border-radius: 50%;
+  border-radius: 999px;
   font: 500 9px/1 var(--font-mono);
   background: var(--paper);
 }
@@ -208,8 +208,9 @@ html.cad-on * {
 }
 @media (max-width: 640px) {
   .axis-tag {
-    width: 13px;
+    min-width: 13px;
     height: 13px;
+    padding-inline: 1px;
     font-size: 7.5px;
   }
 }
@@ -337,7 +338,7 @@ html.cad-on * {
 }
 .section-title {
   margin: 0;
-  font-size: clamp(52px, 10vw, 136px);
+  font-size: min(136px, calc(var(--frame) / 6.9));
   font-weight: 800;
   line-height: 0.86;
   letter-spacing: -0.025em;
@@ -366,6 +367,7 @@ html.cad-on * {
 
 .hero {
   position: relative;
+  z-index: 6;
   height: 100svh;
   min-height: 600px;
   overflow: hidden;
@@ -386,14 +388,11 @@ html.cad-on * {
   align-items: end;
 }
 @media (min-width: 900px) {
-  .hero-head {
-    grid-template-columns: minmax(0, 1fr) 300px;
-  }
-  .hero-title {
-    grid-column: 1 / -1;
-  }
   .hero-bajada {
-    grid-column: 2;
+    position: absolute;
+    top: 0;
+    right: 0;
+    max-width: 300px;
   }
 }
 .hero-title {
@@ -407,7 +406,7 @@ html.cad-on * {
 }
 .hero-name {
   display: block;
-  font-size: min(236px, calc(var(--frame) / 4.6));
+  font-size: min(236px, calc(var(--frame) / 4.6), 22svh);
   font-weight: 820;
   line-height: 0.8;
   letter-spacing: -0.035em;
@@ -673,13 +672,10 @@ html.cad-on * {
 .rotulo-card > a {
   text-decoration: none;
 }
-.rotulo-card .cell:nth-child(2n) {
+.rotulo-card .cell {
   border-right: 0;
 }
-.rotulo-card .cell:first-child {
-  border-right: 0;
-}
-.rotulo-card .cell:nth-last-child(-n + 2) {
+.rotulo-card .cell:last-child {
   border-bottom: 0;
 }
 .rotulo-card img {
@@ -704,8 +700,14 @@ html.cad-on * {
 }
 @media (max-width: 767px) {
   .mesa {
-    height: 760px;
+    height: 720px;
   }
+}
+.mesa-hint {
+  position: absolute;
+  left: 12px;
+  top: 8px;
+  color: var(--concrete-ink);
 }
 .mesa-cota {
   position: absolute;
@@ -735,7 +737,16 @@ html.cad-on * {
 }
 @media (max-width: 767px) {
   .mesa {
-    --cw: min(46%, 170px);
+    --cw: min(40%, 150px);
+  }
+  .muestra {
+    padding: 6px 6px 8px;
+  }
+  .muestra-name {
+    font-size: 15px;
+  }
+  .muestra-detalle {
+    display: none;
   }
 }
 .muestra-img {
@@ -782,6 +793,7 @@ html.cad-on * {
   height: auto;
   aspect-ratio: 4 / 5;
   object-fit: cover;
+  object-position: 50% 30%;
   border: 1px solid var(--graphite);
   border-bottom: 0;
 }
@@ -809,6 +821,7 @@ html.cad-on * {
 }
 .eslabon-cota span {
   position: absolute;
+  white-space: nowrap;
   left: 50%;
   bottom: 5px;
   transform: translateX(-50%);
@@ -866,6 +879,14 @@ html.cad-on * {
     width: max(64px, calc(var(--n) / var(--total) * 100%));
     margin-right: 0;
   }
+  .eslabon-cota {
+    height: 22px;
+  }
+  .eslabon-cota span {
+    left: calc(100% + 12px);
+    bottom: -8px;
+    transform: none;
+  }
   .eslabon .eslabon-cota::after {
     content: '';
     position: absolute;
@@ -882,7 +903,7 @@ html.cad-on * {
 
 .contacto-mail {
   display: inline-block;
-  font-size: clamp(22px, 6.2vw, 92px);
+  font-size: min(92px, calc(var(--frame) / 11.4));
   font-weight: 760;
   line-height: 1;
   letter-spacing: -0.025em;
@@ -926,7 +947,7 @@ html.cad-on * {
 }
 .obra-title {
   margin: 28px 0 18px;
-  font-size: clamp(46px, 10.5vw, 156px);
+  font-size: min(156px, calc(var(--frame) / 8.4));
   font-weight: 820;
   line-height: 0.9;
   letter-spacing: -0.025em;
@@ -1143,13 +1164,36 @@ html.cad-on * {
   border-top: 1px solid var(--graphite);
 }
 .next-link {
-  display: block;
+  display: grid;
+  gap: 24px;
+  align-items: end;
   text-decoration: none;
+}
+.next-text {
+  display: block;
+}
+.next-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border: 1px solid var(--graphite);
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.1, 1);
+}
+.next-link:hover .next-img {
+  transform: translateY(-6px);
+}
+@media (min-width: 900px) {
+  .next-link {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 384px);
+    gap: 48px;
+  }
 }
 .next-title {
   display: block;
   margin: 10px 0 14px;
-  font-size: clamp(44px, 9vw, 140px);
+  font-size: min(140px, calc(var(--frame) / 8.6));
   font-weight: 820;
   line-height: 0.92;
   letter-spacing: -0.025em;
@@ -1208,14 +1252,20 @@ html[data-cad='visible'] .cad {
   height: 10px;
   border: 1px solid #fff;
 }
-html[data-snap='on'] .cad-h,
-html[data-snap='on'] .cad-v {
+/* Sobre algo clicable el cuadradito de selección se vuelve un rombo lleno;
+   cerca de un extremo o punto medio aparece la marca de osnap. */
+.cad-box {
+  transition: background-color 0.15s;
+}
+html[data-hot='on'] .cad-box {
   mix-blend-mode: normal;
+  border-color: var(--marker);
   background: var(--marker);
 }
 html[data-snap='on'] .cad-box {
   mix-blend-mode: normal;
-  border: 2px solid var(--marker);
+  border: 1.5px solid var(--marker);
+  background: transparent;
 }
 .cad-tag {
   position: absolute;
@@ -1319,11 +1369,167 @@ html[data-snap='on'] .cad-box {
 
 /* En mobile la planta (girada si es larga) entra en la pantalla, así el
    panel con la foto del ambiente queda a un scroll corto. */
+.plano-dwg .plan {
+  width: auto;
+  max-width: 100%;
+  max-height: calc(100svh - var(--axis) - var(--header) - 48px);
+  margin-inline: auto;
+}
 @media (max-width: 899px) {
   .plano-dwg .plan {
-    width: auto;
-    max-width: 100%;
     max-height: 62svh;
-    margin-inline: auto;
+  }
+}
+
+/* ───────────────────────── Pie (grafito) ───────────────────────── */
+
+.site-footer {
+  position: relative;
+  z-index: 6;
+  margin-top: 144px;
+  padding: 72px 0 28px;
+  color: var(--paper);
+  background-color: var(--graphite);
+  background-image:
+    linear-gradient(to right, rgb(242 239 232 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(242 239 232 / 0.06) 1px, transparent 1px);
+  background-size: var(--mod) var(--mod);
+  background-position: var(--gx) 0;
+}
+.site-footer a {
+  text-decoration: none;
+}
+.site-footer :focus-visible {
+  outline-color: var(--marker);
+}
+.footer-k {
+  margin: 0 0 10px;
+  color: rgb(242 239 232 / 0.6);
+}
+.footer-top {
+  display: grid;
+  gap: 48px;
+  padding-bottom: 56px;
+}
+@media (min-width: 900px) {
+  .footer-top {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 520px);
+    gap: 40px 32px;
+  }
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+}
+.footer-name {
+  display: inline-block;
+  font-size: min(176px, calc(var(--frame) / 4.6));
+  font-weight: 820;
+  line-height: 0.82;
+  letter-spacing: -0.035em;
+  font-variation-settings: 'wdth' 125;
+  margin-left: -0.04em;
+}
+.footer-bajada {
+  margin: 0;
+  max-width: 30ch;
+  font-size: 16px;
+  color: rgb(242 239 232 / 0.75);
+}
+.footer-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1fr);
+  gap: 32px;
+}
+@media (max-width: 480px) {
+  .footer-cols {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.footer-cols ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+.footer-link {
+  font-size: 16px;
+  background: linear-gradient(var(--marker), var(--marker)) no-repeat 0 100% / 0 1.5px;
+  padding-bottom: 2px;
+  transition: background-size 0.3s ease;
+  overflow-wrap: anywhere;
+}
+.footer-link:hover {
+  background-size: 100% 1.5px;
+}
+.footer-dim {
+  color: rgb(242 239 232 / 0.6);
+  font-size: 14px;
+}
+.footer-rotulo {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid rgb(242 239 232 / 0.3);
+  border-left: 1px solid rgb(242 239 232 / 0.3);
+}
+.fcell {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  min-height: 76px;
+  padding: 10px 12px 12px;
+  border-right: 1px solid rgb(242 239 232 / 0.3);
+  border-bottom: 1px solid rgb(242 239 232 / 0.3);
+}
+.fcell .mono {
+  font-size: 12.5px;
+}
+.fcell .footer-link {
+  font-size: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgb(242 239 232 / 0.4);
+  text-underline-offset: 3px;
+}
+.fcell-k {
+  font: 400 10.5px/1.3 var(--font-mono);
+  color: rgb(242 239 232 / 0.6);
+}
+.fcell-sig,
+.fcell-notas {
+  grid-column: span 3;
+}
+.fcell-sig .signature {
+  align-self: flex-start;
+}
+@media (min-width: 900px) {
+  .footer-rotulo {
+    grid-template-columns: 1fr 0.7fr 1fr 1.3fr 2.2fr;
+  }
+  .fcell-sig,
+  .fcell-notas {
+    grid-column: auto;
+  }
+}
+.footer-desde {
+  margin: 14px 0 0;
+  font-size: 11px;
+}
+
+@media (max-width: 640px) {
+  .hero-meta span:last-child {
+    display: none;
+  }
+}
+@media (max-width: 899px) {
+  .detalle {
+    padding-right: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .socia-img {
+    aspect-ratio: 6 / 5;
   }
 }

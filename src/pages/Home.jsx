@@ -25,7 +25,7 @@ export default function Home() {
         <Estudio />
         <Contacto />
       </main>
-      <Footer lamina="00 · Índice" />
+      <Footer lamina="00" />
     </>
   )
 }

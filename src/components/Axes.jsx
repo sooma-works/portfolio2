@@ -36,7 +36,7 @@ function useFrame() {
 export default function Axes() {
   const { gx, w, step, height } = useFrame()
   const cols = w ? Math.round(w / step) + 1 : 0
-  const rows = Math.ceil(height / step)
+  const rows = Math.ceil(height / 128)
   return (
     <div aria-hidden="true">
       <div className="axes-top">
@@ -48,7 +48,7 @@ export default function Axes() {
       </div>
       <div className="axes-left">
         {Array.from({ length: rows }, (_, i) => (
-          <span key={i} className="axis-tag" style={{ top: (i + 1) * step }}>
+          <span key={i} className="axis-tag" style={{ top: (i + 1) * 128 }}>
             {i + 1}
           </span>
         ))}
