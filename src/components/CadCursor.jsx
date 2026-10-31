@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 const SNAP_TARGETS = 'a, button, [role="button"], [data-snap], summary, label'
-const NEAR = 36 // px: distancia para engancharse a un punto en elementos grandes
+const NEAR = 12 // px: apertura del osnap, como en CAD
 
 const fmt = (px) => (px / 100).toFixed(3)
 
@@ -59,20 +59,21 @@ export default function CadCursor() {
       const el = last.target instanceof Element ? last.target.closest(SNAP_TARGETS) : null
       if (el) {
         const r = el.getBoundingClientRect()
-        const small = r.width < 260 && r.height < 120
         let best = null
         for (const [px, py, m] of snapPoints(r)) {
           const d = Math.hypot(px - x, py - y)
           if (!best || d < best[0]) best = [d, px, py, m]
         }
-        if (best && (small || best[0] < NEAR)) {
+        // Los links de texto no se enganchan: solo cajas (botones, fichas, ambientes).
+        if (best && best[0] < NEAR && r.height >= 32) {
           ;[, x, y, mode] = best
         }
       }
+      root.dataset.hot = el ? 'on' : ''
       const gx = parseFloat(getComputedStyle(root).getPropertyValue('--gx')) || 0
       h.current.style.transform = `translate3d(0, ${y}px, 0)`
       v.current.style.transform = `translate3d(${x}px, 0, 0)`
-      box.current.style.transform = `translate3d(${x - 5}px, ${y - 5}px, 0)`
+      box.current.style.transform = `translate3d(${x - 5}px, ${y - 5}px, 0)${el && !mode ? ' rotate(45deg) scale(0.75)' : ''}`
       const flip = x > window.innerWidth - 220
       tag.current.style.transform = `translate3d(${flip ? x - 14 : x + 14}px, ${y + 12}px, 0) translateX(${flip ? '-100%' : '0'})`
       tag.current.firstChild.textContent = `X ${fmt(x - gx)} · Y ${fmt(y + window.scrollY)}`
@@ -103,6 +104,7 @@ export default function CadCursor() {
       root.classList.remove('cad-on')
       delete root.dataset.cad
       delete root.dataset.snap
+      delete root.dataset.hot
       cancelAnimationFrame(raf)
       window.removeEventListener('pointermove', onMove)
       window.removeEventListener('scroll', onScroll)
