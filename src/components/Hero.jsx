@@ -17,8 +17,8 @@ const photo = obra.fotos[room.photo]
 // El nombre se comprime a medida que el hero sale de pantalla.
 const leaving = (r) => -r.top / (r.height * 0.8)
 
-// Destino de cada vértice al expandir el ambiente al campo de la lámina
-// (todo el ancho, desde abajo del nombre hasta el pie de la sección).
+// Destino de cada vértice al expandir el ambiente al campo de dibujo de la
+// lámina: el mismo recuadro que ocupaba la planta, entre el nombre y el rótulo.
 function morphTargets(pts, [L, T, R, B]) {
   const xs = pts.map((p) => p[0])
   const ys = pts.map((p) => p[1])
@@ -41,8 +41,21 @@ function morphTargets(pts, [L, T, R, B]) {
   })
 }
 
-// Borde superior del campo de la foto abierta: debajo del nombre y la bajada.
-const fieldTop = (sec, head) => head.getBoundingClientRect().bottom - sec.getBoundingClientRect().top + 24
+// Campo de dibujo (el recuadro de la planta) en coordenadas de la sección.
+function fieldBox(sec, field) {
+  const s = sec.getBoundingClientRect()
+  const f = field.getBoundingClientRect()
+  return [f.left - s.left, f.top - s.top, f.right - s.left, f.bottom - s.top]
+}
+
+// La foto abierta queda recortada al campo; la ficha se apoya en su borde inferior.
+function openInField(sec, field, wrap) {
+  const [L, T, R, B] = fieldBox(sec, field)
+  const { width: W, height: H } = sec.getBoundingClientRect()
+  wrap.style.clipPath = `inset(${T}px ${W - R}px ${H - B}px ${L}px)`
+  sec.style.setProperty('--field-l', `${L}px`)
+  sec.style.setProperty('--field-b', `${H - B}px`)
+}
 
 const poly = (pts) => `polygon(${pts.map(([x, y]) => `${x.toFixed(1)}px ${y.toFixed(1)}px`).join(', ')})`
 
@@ -60,7 +73,7 @@ export default function Hero() {
   const [phase, setPhase] = useState('draw') // draw → room → grow → open
   const tl = useRef(null)
 
-  const headRef = useRef(null)
+  const fieldRef = useRef(null)
   const nameRef = useRef(null)
   useScrollVar(nameRef, '--w', 125, 62, leaving)
 
@@ -99,8 +112,7 @@ export default function Hero() {
     // esquinas del ambiente van a su esquina equivalente; los vértices de la
     // muesca de la L van a la esquina que le falta, así la forma se completa
     // en un rectángulo mientras crece, sin pasar por figuras raras.
-    const { width: W, height: H } = sec.current.getBoundingClientRect()
-    const targets = morphTargets(pts, [0, fieldTop(sec.current, headRef.current), W, H])
+    const targets = morphTargets(pts, fieldBox(sec.current, fieldRef.current))
     const state = { t: 0 }
     const apply = () => {
       const e = state.t
@@ -111,7 +123,6 @@ export default function Hero() {
       .fromTo(wrap.current, { opacity: 0 }, { opacity: 1, duration: 0.6, ease: 'power1.out' })
       .add(() => {
         // La foto pasa a ocupar la sección completa; el recorte sigue siendo el patio.
-        // El nombre queda siempre sobre papel: la foto se abre debajo.
         Object.assign(wrap.current.style, { left: '0px', top: '0px', width: '100%', height: '100%' })
         Object.assign(imgRef.current.style, { left: '0px', top: '0px', width: '100%', height: '100%' })
         apply()
@@ -120,18 +131,16 @@ export default function Hero() {
       .to(state, { t: 1, duration: 1.5, ease: 'power3.inOut', onUpdate: apply })
       .add(() => setPhase('open'), '-=0.45')
       .add(() => {
-        wrap.current.style.clipPath = `inset(${fieldTop(sec.current, headRef.current)}px 0 0 0)`
+        openInField(sec.current, fieldRef.current, wrap.current)
       })
   }, [placeInRoom])
 
   useEffect(() => () => tl.current?.kill(), [])
 
-  // Abierta, el campo de la foto sigue al alto del nombre si cambia el tamaño.
+  // Abierta, la foto sigue al campo de dibujo si cambia el tamaño.
   useEffect(() => {
     if (phase !== 'open') return
-    const f = () => {
-      wrap.current.style.clipPath = `inset(${fieldTop(sec.current, headRef.current)}px 0 0 0)`
-    }
+    const f = () => openInField(sec.current, fieldRef.current, wrap.current)
     window.addEventListener('resize', f)
     return () => window.removeEventListener('resize', f)
   }, [phase])
@@ -149,7 +158,7 @@ export default function Hero() {
   return (
     <section ref={sec} className={`hero ${open ? 'is-open' : ''} ${open || phase === 'grow' ? 'is-growing' : ''}`} aria-labelledby="hero-title">
       <div className="frame hero-inner">
-        <div ref={headRef} className="hero-head">
+        <div className="hero-head">
           <h1 id="hero-title" className="hero-title">
             <span className="mono hero-kicker">Estudio</span>
             <span ref={nameRef} className="hero-name">
@@ -159,7 +168,7 @@ export default function Hero() {
           <p className="hero-bajada">{estudio.bajada}</p>
         </div>
 
-        <div className="hero-plan">
+        <div ref={fieldRef} className="hero-plan">
           <Plan
             ref={planRef}
             plan={obra.plan}

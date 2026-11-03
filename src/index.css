@@ -436,6 +436,7 @@ html.cad-on .visor button {
   z-index: 1;
   flex: 1;
   min-height: 0;
+  margin-top: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -468,15 +469,13 @@ html.cad-on .visor button {
   max-width: none;
   object-fit: cover;
 }
-.hero.is-growing .hero-meta {
-  opacity: 0;
-}
 .hero-card {
   position: absolute;
   z-index: 4;
-  left: var(--gx);
-  bottom: 40px;
-  width: min(340px, var(--frame));
+  /* Apoyada en la esquina inferior izquierda del campo de la foto. */
+  left: calc(var(--field-l, var(--gx)) + 16px);
+  bottom: calc(var(--field-b, 40px) + 16px);
+  width: min(340px, calc(var(--frame) - 32px));
   padding: 16px 18px 18px;
   background: var(--paper);
   border: 1px solid var(--graphite);
@@ -1194,6 +1193,18 @@ html.cad-on .visor button {
   min-height: 0;
   object-fit: contain;
   animation: fade-in 0.25s ease;
+}
+/* En pantallas angostas la foto y su epígrafe van juntos, centrados en alto,
+   en vez de dejar la foto flotando en un recuadro vacío. */
+@media (max-width: 899px) {
+  .visor-fig {
+    grid-template-rows: auto auto;
+    align-content: center;
+  }
+  .visor-img {
+    height: auto;
+    max-height: calc(100svh - 220px);
+  }
 }
 .visor-bar {
   display: flex;
