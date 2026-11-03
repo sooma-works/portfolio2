@@ -1,0 +1,7 @@
+# Cloudflare Pages y Netlify: caché larga para lo que no cambia de nombre.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+/img/*
+  Cache-Control: public, max-age=604800

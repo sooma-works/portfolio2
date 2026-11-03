@@ -6,21 +6,11 @@ import { CutProvider } from './components/Cut.jsx'
 import Header from './components/Header.jsx'
 import Home from './pages/Home.jsx'
 import NotFound from './pages/NotFound.jsx'
+// La página de obra pesa poco y va en el paquete principal: así, entrando
+// directo a una obra, no hay un segundo pedido antes de ver el título.
+import Obra from './pages/Obra.jsx'
 
-// Las páginas internas se cargan aparte para que la home arranque liviana.
-const loadObra = () => import('./pages/Obra.jsx')
-const Obra = lazy(loadObra)
 const Creditos = lazy(() => import('./pages/Creditos.jsx'))
-
-// Con la home ya cargada, se baja la página de obra para que el corte no
-// muestre un instante vacío.
-function Prefetch() {
-  useEffect(() => {
-    const idle = window.requestIdleCallback ?? ((f) => setTimeout(f, 2000))
-    idle(() => loadObra())
-  }, [])
-  return null
-}
 
 // Con atrás/adelante del navegador no hay corte: solo vuelve arriba.
 function ScrollOnPop() {
@@ -36,7 +26,6 @@ export default function App() {
   return (
     <CutProvider>
       <ScrollOnPop />
-      <Prefetch />
       <a href="#contenido" className="skip-link mono">
         Saltar al contenido
       </a>
