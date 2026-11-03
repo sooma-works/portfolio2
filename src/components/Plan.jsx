@@ -125,10 +125,16 @@ const Plan = forwardRef(function Plan(
   const rot = rotate ? 90 : 0
 
   const [x0, y0, x1, y1] = useMemo(() => bbox(plan.walls.flat().concat(plan.rooms.flatMap((r) => r.pts))), [plan])
-  const vb = rotate
+  // El norte y la escala tienen tamaño fijo en pantalla (crecen con k), así que
+  // van en una franja propia debajo de la planta y nunca la pisan. El alto de
+  // la franja no cambia el ancho del viewBox, del que sale k.
+  const legendTop = plan.legend === 'tr' && !rotate
+  const base = rotate
     ? [-(y1 + M), x0 - M, y1 - y0 + 2 * M, x1 - x0 + 2 * M]
     : [x0 - M, y0 - M, x1 - x0 + 2 * M, y1 - y0 + 2 * M]
-  const k = useScale(svgRef, vb[2])
+  const k = useScale(svgRef, base[2])
+  const band = legendTop ? 0 : 64 * k
+  const vb = [base[0], base[1], base[2], base[3] + band]
 
   useImperativeHandle(ref, () => ({
     svg: svgRef.current,
@@ -187,10 +193,12 @@ const Plan = forwardRef(function Plan(
     }
   }, [play, onDrawn])
 
-  const legendScreen = [
-    vb[0] + vb[2] - 400 - 90 * k,
-    plan.legend === 'tr' && !rotate ? vb[1] + 70 : vb[1] + vb[3] - 70 - 10 * k,
-  ]
+  // Escala y norte miden 400 cm + 94 px de ancho. En la franja de abajo van
+  // centrados con la planta (que está centrada en el viewBox); arriba, a la derecha.
+  const legendW = 400 + 94 * k
+  const legendScreen = legendTop
+    ? [vb[0] + vb[2] - 400 - 104 * k, vb[1] + 70]
+    : [vb[0] + (vb[2] - legendW) / 2, vb[1] + vb[3] - 34 * k]
 
   return (
     <svg
