@@ -24,7 +24,7 @@ function snapPoints(r) {
 /**
  * Cursor de CAD: cruz que atraviesa la pantalla con coordenadas en vivo.
  * Sobre elementos clicables se engancha a sus extremos y puntos medios.
- * Solo con puntero fino (en táctil no existe).
+ * Solo con puntero fino y pantalla ancha (en táctil no existe).
  */
 export default function CadCursor() {
   const [enabled, setEnabled] = useState(false)
@@ -35,7 +35,7 @@ export default function CadCursor() {
   const snapRef = useRef(null)
 
   useEffect(() => {
-    const mq = window.matchMedia('(hover: hover) and (pointer: fine)')
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 768px)')
     const update = () => setEnabled(mq.matches)
     update()
     mq.addEventListener('change', update)
@@ -75,7 +75,8 @@ export default function CadCursor() {
       v.current.style.transform = `translate3d(${x}px, 0, 0)`
       box.current.style.transform = `translate3d(${x - 5}px, ${y - 5}px, 0)${el && !mode ? ' rotate(45deg) scale(0.75)' : ''}`
       const flip = x > window.innerWidth - 220
-      tag.current.style.transform = `translate3d(${flip ? x - 14 : x + 14}px, ${y + 12}px, 0) translateX(${flip ? '-100%' : '0'})`
+      const up = y > window.innerHeight - 48
+      tag.current.style.transform = `translate3d(${flip ? x - 14 : x + 14}px, ${up ? y - 12 : y + 12}px, 0) translate(${flip ? '-100%' : '0'}, ${up ? '-100%' : '0'})`
       tag.current.firstChild.textContent = `X ${fmt(x - gx)} · Y ${fmt(y + window.scrollY)}`
       snapRef.current.textContent = mode
       root.dataset.snap = mode ? 'on' : ''
