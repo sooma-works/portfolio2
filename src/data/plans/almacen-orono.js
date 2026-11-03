@@ -45,7 +45,7 @@ export default plan({
       pts: [[30, K], [K, 30], [700, 30], [700, 570], [30, 570]] },
     { id: 'barra', name: 'Barra', photo: 1, pts: r(700, 30, 370, 320) },
     { id: 'cuadra', name: 'Cuadra', photo: 5, pts: r(715, 365, 225, 205) },
-    { id: 'bano', name: 'Baño', pts: r(955, 365, 115, 205) },
+    { id: 'bano', name: 'Baño', nota: 'Baño para clientes, accesible, con azulejo blanco hasta el techo. No se fotografió.', pts: r(955, 365, 115, 205) },
   ],
   dims: [
     { a: [0, 0], b: [1100, 0], off: -110 },

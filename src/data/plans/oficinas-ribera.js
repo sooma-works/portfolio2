@@ -50,8 +50,8 @@ export default plan({
     { id: 'direccion', name: 'Dirección', photo: 2, pts: r(1115, 465, 655, 335) },
     { id: 'recepcion', name: 'Recepción', photo: 4, pts: r(30, 815, 570, 405) },
     { id: 'office', name: 'Office', photo: 3, pts: r(615, 815, 485, 405) },
-    { id: 'banos', name: 'Baños', pts: r(1115, 815, 655, 205) },
-    { id: 'archivo', name: 'Archivo', pts: r(1115, 1035, 655, 185) },
+    { id: 'banos', name: 'Baños', nota: 'Núcleo de baños nuevo contra el muro este. Todavía en obra gruesa: sin fotos por ahora.', pts: r(1115, 815, 655, 205) },
+    { id: 'archivo', name: 'Archivo', nota: 'Archivo con estanterías móviles. En etapa de tabiquería: sin fotos por ahora.', pts: r(1115, 1035, 655, 185) },
   ],
   dims: [
     { a: [0, 0], b: [1800, 0], off: -110 },

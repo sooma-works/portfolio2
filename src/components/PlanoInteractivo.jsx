@@ -86,8 +86,8 @@ export default function PlanoInteractivo({ obra }) {
             </span>
           </div>
           <div className="cell">
-            <span className="cell-k">{room.exterior ? 'Descubierto' : 'Cubierto total'}</span>
-            <span className="mono text-[20px]">{room.exterior ? '—' : `${fmtM2(total)} m²`}</span>
+            <span className="cell-k">{room.exterior ? 'Tipo' : 'Sup. útil de la obra'}</span>
+            <span className="mono text-[20px]">{room.exterior ? 'Descubierto' : `${fmtM2(total)} m²`}</span>
           </div>
         </div>
         <div className="plano-photo">
@@ -95,7 +95,10 @@ export default function PlanoInteractivo({ obra }) {
             <Img key={photo.src} photo={photo} sizes="(min-width: 768px) 34vw, 100vw" className="plano-img" />
           ) : (
             <div className="plano-empty">
-              <span className="mono">Sin fotos de este ambiente: es un espacio privado de la familia.</span>
+              <p>
+                <span className="mono plano-empty-k">Sin foto</span>
+                {room.nota ?? 'Este ambiente no se fotografió.'}
+              </p>
             </div>
           )}
         </div>

@@ -56,10 +56,10 @@ export default plan({
     { id: 'cocina', name: 'Cocina', photo: 2, pts: r(390, 30, 210, 420) },
     { id: 'dormitorio', name: 'Dormitorio', photo: 4, pts: r(615, 30, 355, 370) },
     { id: 'bano', name: 'Baño', photo: 5, pts: r(615, 415, 355, 225) },
-    { id: 'lavadero', name: 'Lavadero', pts: r(615, 655, 355, 115) },
+    { id: 'lavadero', name: 'Lavadero', nota: 'Lavadero cerrado con puertas de guatambú, al lado del baño. No se fotografió.', pts: r(615, 655, 355, 115) },
     { id: 'hall', name: 'Hall', photo: 6, pts: r(400, 465, 200, 305) },
-    { id: 'estudio', name: 'Estudio', pts: r(30, 465, 355, 305) },
-    { id: 'balcon', name: 'Balcón', exterior: true, pts: r(30, -120, 540, 120) },
+    { id: 'estudio', name: 'Estudio', nota: 'El tercer ambiente: hoy es el estudio, mañana un cuarto. Sin fotos por pedido de los dueños.', pts: r(30, 465, 355, 305) },
+    { id: 'balcon', name: 'Balcón', nota: 'Se ve al fondo del estar: la carpintería original, restaurada en lugar de cambiada.', exterior: true, pts: r(30, -120, 540, 120) },
   ],
   dims: [
     { a: [1000, 800], b: [0, 800], off: -110 },
