@@ -95,6 +95,15 @@ html.cad-on,
 html.cad-on * {
   cursor: none !important;
 }
+/* El visor de fotos va en la capa superior, por encima de la cruz: ahí vuelve
+   el cursor del sistema. */
+html.cad-on .visor,
+html.cad-on .visor * {
+  cursor: auto !important;
+}
+html.cad-on .visor button {
+  cursor: pointer !important;
+}
 
 .frame {
   width: var(--frame);
@@ -387,17 +396,20 @@ html.cad-on * {
   gap: 12px 32px;
   align-items: end;
 }
+/* La bajada acompaña al nombre como el texto de un rótulo: a su lado, apoyada
+   en la misma línea de base. */
 @media (min-width: 900px) {
+  .hero-head {
+    grid-template-columns: auto minmax(0, 280px);
+    justify-content: space-between;
+  }
   .hero-bajada {
-    position: absolute;
-    top: 0;
-    right: 0;
-    max-width: 300px;
+    padding-left: 16px;
+    border-left: 1px solid var(--graphite);
   }
 }
 .hero-title {
   margin: 0;
-  transition: color 0.8s ease;
 }
 .hero-kicker {
   display: block;
@@ -418,7 +430,6 @@ html.cad-on * {
   font-size: 16px;
   line-height: 1.4;
   max-width: 34ch;
-  transition: color 0.8s ease;
 }
 .hero-plan {
   position: relative;
@@ -452,26 +463,10 @@ html.cad-on * {
   z-index: 2;
   overflow: hidden;
 }
-.hero-photo::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgb(28 29 31 / 0.62), rgb(28 29 31 / 0.38) 38%, rgb(28 29 31 / 0) 62%);
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-.hero.is-open .hero-photo::after {
-  opacity: 1;
-}
 .hero-img {
   position: absolute;
   max-width: none;
   object-fit: cover;
-}
-.hero.is-open .hero-title,
-.hero.is-open .hero-bajada {
-  color: var(--paper);
-  transition-duration: 0.5s;
 }
 .hero.is-growing .hero-meta {
   opacity: 0;
@@ -988,15 +983,6 @@ html.cad-on * {
     grid-column: span 3;
   }
 }
-.obra-portada {
-  margin-top: 32px;
-  margin-bottom: 0;
-}
-.obra-portada img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
 .plano {
   display: grid;
   gap: 24px;
@@ -1048,10 +1034,22 @@ html.cad-on * {
   color: var(--concrete-ink);
   background-image: repeating-linear-gradient(-45deg, rgb(185 180 168 / 0.5) 0 1px, transparent 1px 9px);
 }
-.plano-empty span {
+.plano-empty p {
+  margin: 0;
+  max-width: 30ch;
+  padding: 12px 14px;
   background: var(--paper);
-  padding: 6px 10px;
-  max-width: 28ch;
+  border: 1px solid var(--line);
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--graphite);
+  text-align: left;
+}
+.plano-empty-k {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 11px;
+  color: var(--marker-ink);
 }
 .plano-list {
   display: flex;
@@ -1113,49 +1111,123 @@ html.cad-on * {
   border-radius: 50%;
   font-size: 11px;
 }
-.obra-fotos {
+/* Hoja de contactos: miniaturas cuadradas, chicas, en grilla. */
+.galeria {
   display: grid;
-  gap: 48px;
-  margin-top: 128px;
-}
-.obra-foto {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 12px;
   margin: 0;
+  padding: 0;
+  list-style: none;
 }
-.obra-foto img {
+@media (min-width: 900px) {
+  .galeria {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 32px 24px;
+  }
+}
+.galeria-btn {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 1px solid var(--graphite);
+  background: var(--paper);
+  cursor: zoom-in;
+  overflow: hidden;
+}
+.galeria-btn img {
   display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.1, 1);
 }
-.obra-foto figcaption {
-  margin-top: 8px;
+.galeria-btn:hover img {
+  transform: scale(1.03);
+}
+.galeria-cap {
+  margin: 8px 0 0;
   font-size: 11px;
+  line-height: 1.5;
   color: var(--concrete-ink);
-  max-width: 60ch;
 }
-.obra-foto figcaption span {
+/* En la grilla el epígrafe se corta a tres líneas; completo va en el visor. */
+.galeria-cap {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+.galeria-cap span,
+.visor-cap span {
   color: var(--graphite);
   margin-right: 6px;
 }
-@media (min-width: 768px) {
-  .obra-fotos {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 80px 32px;
-    align-items: end;
-  }
-  .obra-foto:nth-child(3n + 1) {
-    grid-column: 1 / span 8;
-  }
-  .obra-foto:nth-child(3n + 2) {
-    grid-column: 9 / span 4;
-  }
-  .obra-foto:nth-child(3n) {
-    grid-column: 3 / span 10;
-  }
-  .obra-foto.is-v:nth-child(3n + 1) {
-    grid-column: 1 / span 6;
-  }
-  .obra-foto.is-v:nth-child(3n) {
-    grid-column: 5 / span 6;
+
+/* Visor: la foto completa, entera en pantalla. */
+.visor {
+  width: 100vw;
+  max-width: none;
+  height: 100svh;
+  max-height: none;
+  margin: 0;
+  padding: 16px;
+  border: 0;
+  background: var(--paper);
+  color: var(--graphite);
+}
+.visor::backdrop {
+  background: rgb(28 29 31 / 0.6);
+}
+.visor-fig {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 12px;
+  height: 100%;
+  margin: 0;
+}
+.visor-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+  animation: fade-in 0.25s ease;
+}
+.visor-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px 24px;
+  padding-top: 10px;
+  border-top: 1px solid var(--graphite);
+  font-size: 12px;
+}
+.visor-cap {
+  max-width: 70ch;
+  color: var(--concrete-ink);
+}
+.visor-nav {
+  display: flex;
+  gap: 6px;
+}
+.visor-nav button {
+  font: inherit;
+  padding: 8px 12px;
+  border: 1px solid var(--graphite);
+  background: transparent;
+  color: var(--graphite);
+  cursor: pointer;
+}
+.visor-nav button:hover {
+  border-color: var(--marker);
+  color: var(--marker-ink);
+}
+@media (min-width: 900px) {
+  .visor {
+    padding: 32px 48px 24px;
   }
 }
 .obra-next {
@@ -1377,7 +1449,7 @@ html[data-snap='on'] .cad-box {
 }
 @media (max-width: 899px) {
   .plano-dwg .plan {
-    max-height: 62svh;
+    max-height: 54svh;
   }
 }
 

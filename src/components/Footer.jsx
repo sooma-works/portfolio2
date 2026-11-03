@@ -13,7 +13,7 @@ const links = [
 ]
 
 // Pie en grafito: una línea con estudio, índice y contacto, y debajo el
-// rótulo de la lámina con la firma de Sooma en la celda "Dibujó".
+// rótulo de la lámina con la firma de Sooma.
 export default function Footer({ lamina = '00' }) {
   return (
     <footer className="site-footer">
@@ -54,7 +54,6 @@ export default function Footer({ lamina = '00' }) {
             <span className="fcell-k">Fecha</span> {fecha}
           </div>
           <div className="fcell fcell-sig">
-            <span className="fcell-k">Dibujó</span>
             <span className="sig-wrap">
               <Signature variant="white" />
             </span>

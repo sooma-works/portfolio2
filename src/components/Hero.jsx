@@ -17,16 +17,17 @@ const photo = obra.fotos[room.photo]
 // El nombre se comprime a medida que el hero sale de pantalla.
 const leaving = (r) => -r.top / (r.height * 0.8)
 
-// Destino de cada vértice al expandir el ambiente a toda la sección.
-function morphTargets(pts, W, H) {
+// Destino de cada vértice al expandir el ambiente al campo de la lámina
+// (todo el ancho, desde abajo del nombre hasta el pie de la sección).
+function morphTargets(pts, [L, T, R, B]) {
   const xs = pts.map((p) => p[0])
   const ys = pts.map((p) => p[1])
   const [x0, y0, x1, y1] = [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)]
   const corners = [
-    [x0, y0, 0, 0],
-    [x1, y0, W, 0],
-    [x1, y1, W, H],
-    [x0, y1, 0, H],
+    [x0, y0, L, T],
+    [x1, y0, R, T],
+    [x1, y1, R, B],
+    [x0, y1, L, B],
   ]
   const near = (a, b) => Math.abs(a - b) < 1.5
   const isCorner = ([x, y], c) => near(x, c[0]) && near(y, c[1])
@@ -39,6 +40,9 @@ function morphTargets(pts, W, H) {
     return [c[2], c[3]]
   })
 }
+
+// Borde superior del campo de la foto abierta: debajo del nombre y la bajada.
+const fieldTop = (sec, head) => head.getBoundingClientRect().bottom - sec.getBoundingClientRect().top + 24
 
 const poly = (pts) => `polygon(${pts.map(([x, y]) => `${x.toFixed(1)}px ${y.toFixed(1)}px`).join(', ')})`
 
@@ -56,6 +60,7 @@ export default function Hero() {
   const [phase, setPhase] = useState('draw') // draw → room → grow → open
   const tl = useRef(null)
 
+  const headRef = useRef(null)
   const nameRef = useRef(null)
   useScrollVar(nameRef, '--w', 125, 62, leaving)
 
@@ -90,12 +95,12 @@ export default function Hero() {
       wrap.current.style.opacity = 1
       return
     }
-    // Cada vértice del ambiente viaja a una esquina de la pantalla. Las
+    // Cada vértice del ambiente viaja a una esquina del campo. Las
     // esquinas del ambiente van a su esquina equivalente; los vértices de la
     // muesca de la L van a la esquina que le falta, así la forma se completa
     // en un rectángulo mientras crece, sin pasar por figuras raras.
     const { width: W, height: H } = sec.current.getBoundingClientRect()
-    const targets = morphTargets(pts, W, H)
+    const targets = morphTargets(pts, [0, fieldTop(sec.current, headRef.current), W, H])
     const state = { t: 0 }
     const apply = () => {
       const e = state.t
@@ -106,20 +111,30 @@ export default function Hero() {
       .fromTo(wrap.current, { opacity: 0 }, { opacity: 1, duration: 0.6, ease: 'power1.out' })
       .add(() => {
         // La foto pasa a ocupar la sección completa; el recorte sigue siendo el patio.
+        // El nombre queda siempre sobre papel: la foto se abre debajo.
         Object.assign(wrap.current.style, { left: '0px', top: '0px', width: '100%', height: '100%' })
         Object.assign(imgRef.current.style, { left: '0px', top: '0px', width: '100%', height: '100%' })
         apply()
         setPhase('grow')
       }, '+=0.7')
       .to(state, { t: 1, duration: 1.5, ease: 'power3.inOut', onUpdate: apply })
-      // El título pasa a papel recién cuando la foto ya lo tiene debajo.
       .add(() => setPhase('open'), '-=0.45')
       .add(() => {
-        wrap.current.style.clipPath = 'none'
+        wrap.current.style.clipPath = `inset(${fieldTop(sec.current, headRef.current)}px 0 0 0)`
       })
   }, [placeInRoom])
 
   useEffect(() => () => tl.current?.kill(), [])
+
+  // Abierta, el campo de la foto sigue al alto del nombre si cambia el tamaño.
+  useEffect(() => {
+    if (phase !== 'open') return
+    const f = () => {
+      wrap.current.style.clipPath = `inset(${fieldTop(sec.current, headRef.current)}px 0 0 0)`
+    }
+    window.addEventListener('resize', f)
+    return () => window.removeEventListener('resize', f)
+  }, [phase])
 
   // Si cambia el tamaño antes de abrir, la foto se vuelve a acomodar al patio.
   useEffect(() => {
@@ -134,7 +149,7 @@ export default function Hero() {
   return (
     <section ref={sec} className={`hero ${open ? 'is-open' : ''} ${open || phase === 'grow' ? 'is-growing' : ''}`} aria-labelledby="hero-title">
       <div className="frame hero-inner">
-        <div className="hero-head">
+        <div ref={headRef} className="hero-head">
           <h1 id="hero-title" className="hero-title">
             <span className="mono hero-kicker">Estudio</span>
             <span ref={nameRef} className="hero-name">
@@ -163,7 +178,7 @@ export default function Hero() {
       </div>
 
       <div ref={wrap} className="hero-photo" style={{ opacity: 0 }}>
-        <Img ref={imgRef} photo={photo} priority sizes="100vw" className="hero-img" />
+        <Img ref={imgRef} photo={photo} loading="eager" sizes="100vw" className="hero-img" />
       </div>
 
       <div className={`hero-card ${open ? 'is-in' : ''}`} aria-hidden={!open}>

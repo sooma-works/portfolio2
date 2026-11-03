@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { CutLink } from '../components/Cut.jsx'
 import Footer from '../components/Footer.jsx'
+import Galeria from '../components/Galeria.jsx'
 import Img from '../components/Img.jsx'
 import PlanoInteractivo from '../components/PlanoInteractivo.jsx'
 import { Extrude } from '../components/Titles.jsx'
@@ -9,7 +10,6 @@ import { getObra, nextObra, obras } from '../data/obras.js'
 import NotFound from './NotFound.jsx'
 
 const partes = ['Problema', 'Idea', 'Solución']
-
 export default function Obra() {
   const { slug } = useParams()
   const obra = getObra(slug)
@@ -20,7 +20,6 @@ export default function Obra() {
 
   if (!obra) return <NotFound />
   const next = nextObra(slug)
-  const [portada, ...resto] = obra.fotos
 
   return (
     <>
@@ -73,17 +72,13 @@ export default function Obra() {
           </dl>
         </div>
 
-        <figure className="frame obra-portada">
-          <Img photo={portada} priority sizes="(min-width: 1400px) 1280px, 100vw" />
-        </figure>
-
         <section className="frame section" aria-labelledby="planta-title">
           <div className="section-head">
             <h2 id="planta-title" className="sub-title">
               Planta
             </h2>
             <p className="section-note">
-              Pasá por los ambientes (o tocalos) para ver cada uno. Las medidas están en metros.
+              Pasá el mouse o tocá un ambiente para ver su foto y su superficie. Las cotas están en metros.
             </p>
           </div>
           <PlanoInteractivo obra={obra} key={obra.slug} />
@@ -101,15 +96,14 @@ export default function Obra() {
           ))}
         </section>
 
-        <section className="frame obra-fotos" aria-label="Fotos de la obra">
-          {resto.map((f, i) => (
-            <figure key={f.src} className={`obra-foto ${f.h > f.w ? 'is-v' : ''}`}>
-              <Img photo={f} sizes="(min-width: 768px) 60vw, 100vw" />
-              <figcaption className="mono">
-                <span>F-{String(i + 2).padStart(2, '0')}</span> {f.alt}
-              </figcaption>
-            </figure>
-          ))}
+        <section className="frame section" aria-labelledby="fotos-title">
+          <div className="section-head">
+            <h2 id="fotos-title" className="sub-title">
+              Fotos
+            </h2>
+            <p className="section-note">Tocá una foto para verla completa.</p>
+          </div>
+          <Galeria fotos={obra.fotos} nombre={obra.nombre} />
         </section>
 
         <nav className="frame obra-next" aria-label="Obra siguiente">
